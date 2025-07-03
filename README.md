@@ -3,6 +3,6 @@
 
 ### Roadmap
 - [x] Linking to system clipboard and piping in and out
-- [ ] Sharing
+- [ ] Sharing (Backend is available [here](https://github.com/Sushi-Mampfer/ClipWeb))
 - [ ] History
 - [ ] Syncing
