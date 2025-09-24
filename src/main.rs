@@ -28,7 +28,10 @@ fn main() {
 
     match cli.value {
         Some(data) => {
-            clipboard.write_text(data).unwrap();
+            clipboard.write_text(data.clone()).unwrap();
+            if cli.share {
+                create_link(data);
+            }
             exit(0)
         }
         _ => (),
@@ -37,7 +40,12 @@ fn main() {
     if stdin.is_terminal() {
         match clipboard.read() {
             Some(data) => match data.as_text() {
-                Some(text) => stdout.write_all(text.as_bytes()).unwrap(),
+                Some(text) => {
+                    if cli.share {
+                        create_link(text.to_string());
+                    }
+                    stdout.write_all(text.as_bytes()).unwrap()
+                }
                 None => stderr.write_all(b"No string in clipboard").unwrap(),
             },
             None => (),
@@ -46,10 +54,31 @@ fn main() {
     }
     let mut data = String::new();
     stdin.read_to_string(&mut data).unwrap();
-    clipboard.write_text(data).unwrap();
+    clipboard.write_text(data.clone()).unwrap();
+    if cli.share {
+        create_link(data);
+    }
 }
 
-fn create_link(data: String) -> String {
+fn create_link(data: String) {
+    let params = [("content", data), ("privat", "false".to_string())];
     let client = Client::new();
-    client.post("")
+    let res = match client
+        .post("https://clip.tim.hackclub.app/create")
+        .json(&params)
+        .send()
+    {
+        Ok(r) => r,
+        Err(e) => {
+            eprintln!("{}", e);
+            exit(1)
+        }
+    };
+    if res.status().is_success() {
+        println!("https://clip.tim.hackclub.app/{}", res.text().unwrap());
+        exit(0)
+    } else {
+        eprintln!("Request failed with status code {}.", res.status().as_str());
+        exit(1)
+    }
 }
