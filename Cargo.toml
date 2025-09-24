@@ -3,9 +3,10 @@ name = "clip"
 version = "1.0.1"
 edition = "2024"
 repository = "https://github.com/Sushi-Mampfer/clip"
+publish = true
 
 [dependencies]
-clap = { version = "4.5.40", features = ["derive"] }
+clap = { version = "4.5.48", features = ["derive"] }
 clippers = "0.1.2"
 reqwest = { version = "0.12.23", features = ["blocking", "json"] }
 
