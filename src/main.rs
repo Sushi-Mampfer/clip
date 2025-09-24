@@ -5,6 +5,7 @@ use std::{
 
 use clap::Parser;
 use reqwest::blocking::Client;
+use serde_json::json;
 
 #[derive(Parser)]
 #[command(
@@ -61,7 +62,7 @@ fn main() {
 }
 
 fn create_link(data: String) {
-    let params = [("content", data), ("privat", "false".to_string())];
+    let params = json!({"content": data, "private": false});
     let client = Client::new();
     let res = match client
         .post("https://clip.tim.hackclub.app/create")
@@ -78,7 +79,11 @@ fn create_link(data: String) {
         println!("https://clip.tim.hackclub.app/{}", res.text().unwrap());
         exit(0)
     } else {
-        eprintln!("Request failed with status code {}.", res.status().as_str());
+        eprintln!(
+            "Request failed with status code {} and body {}.",
+            res.status().as_str(),
+            res.text().unwrap()
+        );
         exit(1)
     }
 }

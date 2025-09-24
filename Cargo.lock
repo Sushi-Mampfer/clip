@@ -223,6 +223,7 @@ dependencies = [
  "clap",
  "clippers",
  "reqwest",
+ "serde_json",
 ]
 
 [[package]]
