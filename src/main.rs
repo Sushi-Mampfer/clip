@@ -3,8 +3,8 @@ use std::{
     process::exit,
 };
 
-use clap::{Parser, builder::Str};
-use reqwest::blocking::{self, Client};
+use clap::Parser;
+use reqwest::blocking::Client;
 
 #[derive(Parser)]
 #[command(
